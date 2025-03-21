@@ -95,3 +95,6 @@ input[readonly] {
   margin: 5px 0;
   border-radius: 5px;
 }
+#share-link{
+  visibility:hidden;
+}

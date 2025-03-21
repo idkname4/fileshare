@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Handle file selection
   browseBtn.addEventListener("click", () => fileInput.click());
+
   fileInput.addEventListener("change", handleFiles);
   dropArea.addEventListener("dragover", (e) => e.preventDefault());
   dropArea.addEventListener("drop", (e) => {
@@ -35,6 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Generate a mock file link (Replace with backend logic)
   generateLinkBtn.addEventListener("click", function () {
+    shareLink.style.visibility="visible";
     if (uploadedFiles.length > 0) {
       let fileNames = uploadedFiles.map((file) => file.name).join(",");
       let fakeUrl = `https://fakefileshare.com/files/${btoa(fileNames)}`;
