@@ -39,8 +39,33 @@ document.addEventListener("DOMContentLoaded", function () {
     shareLink.style.visibility="visible";
     if (uploadedFiles.length > 0) {
       let fileNames = uploadedFiles.map((file) => file.name).join(",");
-      let fakeUrl = `https://fakefileshare.com/files/${btoa(fileNames)}`;
-      shareLink.value = fakeUrl;
+      generateLinkBtn.addEventListener("click", async function () {
+        shareLink.style.visibility = "visible";
+    
+        if (uploadedFiles.length > 0) {
+            let formData = new FormData();
+            formData.append("file", uploadedFiles[0]); // Upload first file only (modify for multiple)
+    
+            try {
+                let response = await fetch("https://file.io", {
+                    method: "POST",
+                    body: formData,
+                });
+    
+                let result = await response.json();
+                if (result.success) {
+                    shareLink.value = result.link; // Real file link
+                    shortenLinkBtn.style.display = "inline-block";
+                } else {
+                    console.error("File upload failed", result);
+                    alert("Error uploading file");
+                }
+            } catch (error) {
+                console.error("Upload error", error);
+            }
+        }
+    });
+    
       shortenLinkBtn.style.display = "inline-block";
     }
   });
@@ -48,14 +73,15 @@ document.addEventListener("DOMContentLoaded", function () {
   // Shorten the link using TinyURL API
   shortenLinkBtn.addEventListener("click", async function () {
     if (shareLink.value) {
-      try {
-        let response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(shareLink.value)}`);
-        let shortUrl = await response.text();
-        shortenedLink.value = shortUrl;
-        shortenedLink.style.display = "inline-block";
-      } catch (error) {
-        console.error("Error shortening URL", error);
-      }
+        try {
+            let response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(shareLink.value)}`);
+            let shortUrl = await response.text();
+            shortenedLink.value = shortUrl;
+            shortenedLink.style.display = "inline-block";
+        } catch (error) {
+            console.error("Error shortening URL", error);
+        }
     }
-  });
+});
+
 });
